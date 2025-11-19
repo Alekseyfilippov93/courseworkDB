@@ -34,7 +34,7 @@ class DBManager:
     def get_companies_and_vacancies_count(self) -> List[tuple]:
         """Получает список всех компаний и количество вакансий."""
         query = """
-            SELECT c.company_name, COUNT(v.vacancy_id) 
+            SELECT c.company_name, COUNT(v.vacancy_id)
             FROM companies c
             LEFT JOIN vacancies v ON c.company_id = v.company_id
             GROUP BY c.company_name
@@ -45,8 +45,8 @@ class DBManager:
     def get_all_vacancies(self) -> List[tuple]:
         """Получает список всех вакансий (компания, название, зарплата, ссылка)."""
         query = """
-            SELECT c.company_name, v.vacancy_title, 
-                   COALESCE(CONCAT(v.salary_from, ' - ', v.salary_to, ' ', v.salary_currency), 'Зарплата не указана'), 
+            SELECT c.company_name, v.vacancy_title,
+                   COALESCE(CONCAT(v.salary_from, ' - ', v.salary_to, ' ', v.salary_currency), 'Зарплата не указана'),
                    v.vacancy_url
             FROM vacancies v
             JOIN companies c ON v.company_id = c.company_id;
@@ -75,10 +75,14 @@ class DBManager:
 
     def get_vacancies_with_keyword(self, keyword: str) -> List[tuple]:
         """Получает список вакансий, в названии которых содержится ключевое слово."""
+        lower_keyword = keyword.lower()
+
         query = """
             SELECT c.company_name, v.vacancy_title, v.salary_from, v.vacancy_url
             FROM vacancies v
             JOIN companies c ON v.company_id = c.company_id
+            WHERE v.vacancy_title ILIKE %s;
+            -- ILIKE %s уже нечувствителен к регистру, но приводим его к нижнему регистру для надежности
             WHERE v.vacancy_title ILIKE %s;
         """
         return self._execute_query(query, (f"%{keyword}%",))
