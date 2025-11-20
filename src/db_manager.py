@@ -78,11 +78,9 @@ class DBManager:
         lower_keyword = keyword.lower()
 
         query = """
-            SELECT c.company_name, v.vacancy_title, v.salary_from, v.vacancy_url
-            FROM vacancies v
-            JOIN companies c ON v.company_id = c.company_id
-            WHERE v.vacancy_title ILIKE %s;
-            -- ILIKE %s уже нечувствителен к регистру, но приводим его к нижнему регистру для надежности
-            WHERE v.vacancy_title ILIKE %s;
-        """
-        return self._execute_query(query, (f"%{keyword}%",))
+                    SELECT c.company_name, v.vacancy_title, v.salary_from, v.vacancy_url -- Должно быть 4 столбца!
+                    FROM vacancies v
+                    JOIN companies c ON v.company_id = c.company_id
+                    WHERE v.vacancy_title ILIKE %s;
+                """
+        return self._execute_query(query, (f"%{lower_keyword}%",))

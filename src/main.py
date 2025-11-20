@@ -108,8 +108,8 @@ def user_interaction(manager: DBManager) -> None:
         keyword_vacancies = manager.get_vacancies_with_keyword(keyword)
         print(f"Результаты поиска по '{keyword}' ({len(keyword_vacancies)} найдено):")
         if keyword_vacancies:
+            # Проверьте, что здесь 4 переменных: company, title, salary, url
             for company, title, salary, url in keyword_vacancies[:5]:
-                # Здесь используем get_vacancies_with_keyword, он возвращает 4 столбца (company, title, salary_from, url)
                 print(f"  - {title} ({company}): ЗП: {salary} -> {url}")
         else:
             print("   Вакансии с таким ключевым словом не найдены.")
