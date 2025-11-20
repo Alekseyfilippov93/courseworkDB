@@ -8,9 +8,16 @@ from src.db_manager import DBManager
 
 # 10 выбранных компаний
 COMPANY_NAMES = [
-    "Skyeng", "Яндекс Крауд", "Яндекс", "РУСАЛ", "ООО РН-Ванкор",
-    "ООО ВИРАЖ", "IT-Компания АБС", "Банк ВТБ (ПАО)",
-    "Planeta.ru", "ООО Сбербанк-Сервис"
+    "Skyeng",
+    "Яндекс Крауд",
+    "Яндекс",
+    "РУСАЛ",
+    "ООО РН-Ванкор",
+    "ООО ВИРАЖ",
+    "IT-Компания АБС",
+    "Банк ВТБ (ПАО)",
+    "Planeta.ru",
+    "ООО Сбербанк-Сервис",
 ]
 
 # Глобальная переменная для имени БД (будет установлена в main)
@@ -33,8 +40,10 @@ def collect_and_save_data(client: HHClient, db_params: Dict[str, Any]) -> None:
         employer_id = client.get_employer_id(name)
 
         if employer_id:
-            print(f"Найдена компания '{name}' (ID: {employer_id}). Собираем вакансии...")
-            all_companies_data.append({'id': employer_id, 'name': name})
+            print(
+                f"Найдена компания '{name}' (ID: {employer_id}). Собираем вакансии..."
+            )
+            all_companies_data.append({"id": employer_id, "name": name})
 
             vacancies = client.get_vacancies_by_employer(employer_id)
             all_vacancies_data.extend(vacancies)
@@ -103,7 +112,9 @@ def user_interaction(manager: DBManager) -> None:
         print("   Нет вакансий с зарплатой выше средней (или данные отсутствуют).")
 
     # 4. Поиск по ключевому слову
-    keyword = input("\n4. Введите ключевое слово для поиска вакансий (например, Java, Junior): ").strip()
+    keyword = input(
+        "\n4. Введите ключевое слово для поиска вакансий (например, Java, Junior): "
+    ).strip()
     if keyword:
         keyword_vacancies = manager.get_vacancies_with_keyword(keyword)
         print(f"Результаты поиска по '{keyword}' ({len(keyword_vacancies)} найдено):")
@@ -119,11 +130,11 @@ def main():
     """Точка входа в программу, инициализирует процесс."""
     global DB_NAME
 
-    db_params = config('db')
+    db_params = config("db")
 
     # !!! КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Используем .pop() для удаления 'database' из словаря !!!
     # Это решает TypeError: you can't specify both 'database' and 'dbname'
-    DB_NAME = db_params.pop('database')
+    DB_NAME = db_params.pop("database")
 
     hh_client = HHClient()
 
@@ -135,8 +146,10 @@ def main():
         db_manager = DBManager(DB_NAME, db_params)
         user_interaction(db_manager)
     except Exception as e:
-        print(f"\nОшибка при инициализации DBManager или выполнении запросов. Проверьте лог. Ошибка: {e}")
+        print(
+            f"\nОшибка при инициализации DBManager или выполнении запросов. Проверьте лог. Ошибка: {e}"
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
