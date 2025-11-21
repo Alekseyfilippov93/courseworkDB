@@ -16,7 +16,7 @@ class HHClient:
         self.max_per_page = 100  # Максимальное количество вакансий на странице
 
     def _make_request(
-            self, url: str, params: Dict[str, Any]
+        self, url: str, params: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Приватный метод для выполнения GET-запроса с обработкой ошибок."""
         try:
@@ -40,7 +40,7 @@ class HHClient:
         return None
 
     def _fetch_all_pages(
-            self, url: str, initial_params: Dict[str, Any]
+        self, url: str, initial_params: Dict[str, Any]
     ) -> List[Dict[str, Any]]:
         """Приватный метод для сбора данных"""
         all_items: List[Dict[str, Any]] = []
