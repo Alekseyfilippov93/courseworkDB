@@ -20,7 +20,7 @@ COMPANY_NAMES = [
     "ООО Сбербанк-Сервис",
 ]
 
-# Глобальная переменная для имени БД (будет установлена в main)
+# Глобальная переменная для имени БД
 DB_NAME: str = ""
 
 
@@ -28,14 +28,12 @@ def collect_and_save_data(client: HHClient, db_params: Dict[str, Any]) -> None:
     """
     Основная функция сбора данных с HH.ru, создания БД/таблиц и сохранения данных.
     """
-    global DB_NAME  # Используем глобальную переменную
 
     all_companies_data: List[Dict[str, str]] = []
     all_vacancies_data: List[Dict[str, Any]] = []
 
-    print("--- 1. Сбор данных о компаниях и вакансиях с HH.ru ---")
+    print("1. Сбор данных о компаниях и вакансиях с HH.ru")
 
-    # ... (логика сбора данных)
     for name in COMPANY_NAMES:
         employer_id = client.get_employer_id(name)
 
@@ -55,8 +53,8 @@ def collect_and_save_data(client: HHClient, db_params: Dict[str, Any]) -> None:
         print("Сбор данных не удался. Проверьте названия компаний или API-клиент.")
         return
 
-    # --- Создание БД, Таблиц и Вставка Данных ---
-    print("\n--- 2. Создание БД и Таблиц ---")
+    # Создание БД, Таблиц и Вставка Данных
+    print("\n 2. Создание БД и Таблиц")
 
     # 2.1 Создаем базу данных
     create_database(DB_NAME, db_params)
@@ -64,12 +62,11 @@ def collect_and_save_data(client: HHClient, db_params: Dict[str, Any]) -> None:
     conn = None
     try:
         # 2.2 Подключаемся к целевой БД и создаем таблицы
-        # db_params теперь не содержит 'database', так как он удален в main()
         conn = psycopg2.connect(dbname=DB_NAME, **db_params)
         create_tables(conn)
 
         # 2.3 Заполнение Таблиц
-        print("\n--- 3. Заполнение Таблиц данными ---")
+        print("\n 3. Заполнение Таблиц данными")
         insert_data_to_tables(conn, all_companies_data, all_vacancies_data)
 
     except psycopg2.Error as e:
@@ -81,13 +78,11 @@ def collect_and_save_data(client: HHClient, db_params: Dict[str, Any]) -> None:
 
 def user_interaction(manager: DBManager) -> None:
     """
-    Интерфейс для взаимодействия с пользователем, выводящий результаты запросов.
+    Интерфейс для взаимодействия с пользователем.
     """
     print("\n" + "=" * 60)
     print("= МЕНЕДЖЕР АНАЛИЗА ВАКАНСИЙ (HH.ru) - РЕЗУЛЬТАТЫ ЗАПРОСОВ =")
     print("=" * 60)
-
-    # ... (логика вывода запросов)
 
     # 1. Список компаний и количество вакансий
     print("\n1. Компании и количество вакансий:")
@@ -132,8 +127,6 @@ def main():
 
     db_params = config("db")
 
-    # !!! КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Используем .pop() для удаления 'database' из словаря !!!
-    # Это решает TypeError: you can't specify both 'database' and 'dbname'
     DB_NAME = db_params.pop("database")
 
     hh_client = HHClient()

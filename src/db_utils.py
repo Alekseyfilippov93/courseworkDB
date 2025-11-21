@@ -52,11 +52,11 @@ def create_tables(conn: psycopg2.connect) -> None:
 
 
 def insert_data_to_tables(
-    conn: psycopg2.connect, companies_data: List[Dict], vacancies_data: List[Dict]
+        conn: psycopg2.connect, companies_data: List[Dict], vacancies_data: List[Dict]
 ) -> None:
     """Заполняет таблицы данными о работодателях и их вакансиях."""
     with conn.cursor() as cur:
-        # --- Вставка компаний ---
+        # Заполнение компаний
         for company in companies_data:
             cur.execute(
                 """
@@ -66,7 +66,7 @@ def insert_data_to_tables(
                 (company["id"], company["name"]),
             )
 
-        # --- Вставка вакансий ---
+        # Заполнение вакансий
         for vacancy in vacancies_data:
             salary = vacancy.get("salary")
 

@@ -5,11 +5,10 @@ from typing import Any, Dict, List, Optional
 class DBManager:
     """
     Класс для управления и выполнения SQL-запросов к БД.
-    Реализует методы, требуемые техническим заданием.
     """
 
     def __init__(self, database_name: str, params: Dict[str, Any]):
-        """Инициализирует менеджер с параметрами подключения."""
+        """Создаем объект, который будет управлять БД"""
         self.database_name = database_name
         self.params = params
 
@@ -32,7 +31,7 @@ class DBManager:
         return results
 
     def get_companies_and_vacancies_count(self) -> List[tuple]:
-        """Получает список всех компаний и количество вакансий."""
+        """Функция получения всех компаний и количество вакансий."""
         query = """
             SELECT c.company_name, COUNT(v.vacancy_id)
             FROM companies c
@@ -57,7 +56,6 @@ class DBManager:
         """Получает среднюю зарплату 'от' по вакансиям."""
         query = "SELECT AVG(salary_from) FROM vacancies WHERE salary_from IS NOT NULL;"
         result = self._execute_query(query)
-        # Упрощаем возврат: None, если нет данных
         return result[0][0] if result and result[0][0] else None
 
     def get_vacancies_with_higher_salary(self) -> List[tuple]:
@@ -78,7 +76,7 @@ class DBManager:
         lower_keyword = keyword.lower()
 
         query = """
-                    SELECT c.company_name, v.vacancy_title, v.salary_from, v.vacancy_url -- Должно быть 4 столбца!
+                    SELECT c.company_name, v.vacancy_title, v.salary_from, v.vacancy_url
                     FROM vacancies v
                     JOIN companies c ON v.company_id = c.company_id
                     WHERE v.vacancy_title ILIKE %s;

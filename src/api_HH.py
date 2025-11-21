@@ -9,14 +9,14 @@ class HHClient:
     """
 
     def __init__(self):
-        """Инициализирует клиент, загружая URL и заголовки из конфигурации."""
+        """Создаёт объект для работы с API HeadHunter."""
         api_config = config("api")
         self.base_url = api_config.get("base_url", "https://api.hh.ru")
         self.headers = api_config.get("headers", {})
         self.max_per_page = 100  # Максимальное количество вакансий на странице
 
     def _make_request(
-        self, url: str, params: Dict[str, Any]
+            self, url: str, params: Dict[str, Any]
     ) -> Optional[Dict[str, Any]]:
         """Приватный метод для выполнения GET-запроса с обработкой ошибок."""
         try:
@@ -28,7 +28,7 @@ class HHClient:
             return None
 
     def get_employer_id(self, company_name: str) -> Optional[str]:
-        """Ищет ID работодателя по его названию. Сompany_name: Название компании для поиска."""
+        """Ищет ID работодателя по его названию."""
         url = f"{self.base_url}/employers"
         params = {"text": company_name, "per_page": 1}
 
@@ -40,9 +40,9 @@ class HHClient:
         return None
 
     def _fetch_all_pages(
-        self, url: str, initial_params: Dict[str, Any]
+            self, url: str, initial_params: Dict[str, Any]
     ) -> List[Dict[str, Any]]:
-        """Приватный метод для сбора данных с учетом пагинации."""
+        """Приватный метод для сбора данных"""
         all_items: List[Dict[str, Any]] = []
         page = 0
         total_pages = 1  # Начинаем с 1 для первого запроса
@@ -68,16 +68,13 @@ class HHClient:
         return all_items
 
     def get_vacancies_by_employer(self, employer_id: str) -> List[Dict[str, Any]]:
-        """Собирает все вакансии указанного работодателя (с пагинацией).
-        employer_id: ID работодателя.
-        результат  Список словарей с данными о вакансиях.
-        """
+        """Собирает все вакансии указанного работодателя"""
         url = f"{self.base_url}/vacancies"
 
         initial_params = {
             "employer_id": employer_id,
             "per_page": self.max_per_page,
-            "only_with_salary": True,  # Фильтр для ТЗ
+            "only_with_salary": True,
         }
 
         return self._fetch_all_pages(url, initial_params)
