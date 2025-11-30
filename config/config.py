@@ -5,7 +5,6 @@ from typing import Dict, Any
 # Указываем, что .env находится в той же папке, что и этот файл
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
 
-
 def config(section: str = 'db') -> Dict[str, Any]:
     """Возвращает параметры для подключения к PostgreSQL или API,
     читая их из переменных окружения.
